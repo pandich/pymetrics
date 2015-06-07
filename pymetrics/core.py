@@ -1,32 +1,37 @@
-#!/usr/bin/env python2
+from util import issubclass_recursive
+from util import coalesce
 
 
 class MetricError(Exception):
     def __init__(self):
         return
 
+
 class MetricTypeError(TypeError, MetricError):
     def __init__(self, o):
-        Exception.__init__(self, 'class {class_name:s} is not a supported metric type'.format(
-            class_name=o.__class__.__name__
-        ))
+        Exception.__init__(self,
+                           'class {class_name:s} is not a supported metric '
+                           'type'.format(
+                               class_name=o.__class__.__name__
+                           ))
         return
 
 
 class MetricValueError(ValueError, MetricError):
     def __init__(self, name, value):
-        Exception.__init__(self, '{name:s} has an invalid value: {value:s}'.format(
-            name=name,
-            value=value,
-        ))
+        Exception.__init__(self,
+                           '{name:s} has an invalid value: {value:s}'.format(
+                               name=name,
+                               value=value,
+                           ))
         return
 
 
-class Metric():
+class Metric:
     def __init__(self, name):
         self.data = {
-            'metric':self.__class__.__name__.lower(),
-            'name':name,
+            'metric': self.__class__.__name__.lower(),
+            'name': name,
         }
         return
 
@@ -39,7 +44,7 @@ class Metric():
         return self.data['metric']
 
     def snapshot(self):
-        return { k:v for k,v in self.data.items() }
+        return {k: v for k, v in self.data.items()}
 
     def __str__(self):
         output = 'Metric: [name:"{value:s}"]'.format(
@@ -53,10 +58,10 @@ class Metric():
                     value=str(self.data[name]),
                 )
 
-        return output 
+        return output
 
 
-class Registry():
+class Registry:
     def __init__(self):
         self.registry = {}
         return
@@ -65,9 +70,9 @@ class Registry():
         if not metric:
             raise MetricValueError('metric', metric)
 
-        if not issubclass(type(metric), Metric):
+        if not issubclass_recursive(metric, Metric):
             raise MetricTypeError(metric)
-            
+
         self.registry[metric.name] = metric
 
     def __str__(self):
@@ -80,26 +85,25 @@ class Registry():
         output += ']'
         return output
 
+    def size(self):
+        return len(self.registry)
+
 
 class Counter(Metric):
     def __init__(self, name, initial_count=0):
         Metric.__init__(self, name)
-        self.data['count'] = initial_count
+        self.data['count'] = coalesce(initial_count, 0)
 
     @property
     def count(self):
         return self.data['count']
 
     def inc(self, amount=1):
-        self.data['count'] += amount
+        self.data['count'] += coalesce(amount, 0)
         return
 
     def dec(self, amount=1):
-        self.inc(-amount)
-        return
-
-    def __add__(self, amount):
-        self.inc(amount)
+        self.inc(-coalesce(amount, 0))
         return
 
 
@@ -111,16 +115,3 @@ class Meter(Counter):
     def mark(self):
         self.inc()
         return
-
-r = Registry()
-
-c = Counter('bob')
-r.register(c)
-
-m = Marker('joe')
-r.register(m)
-
-print r
-c += 1
-m.mark()
-print r

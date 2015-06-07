@@ -10,4 +10,4 @@ setup(name='pymetrics',
       url='https://github.com/pandich/pymetrics',
       packages=['pymanage', 'pymanage.core'],
       license='Apache License, Version 2.0',
-     )
+      )
