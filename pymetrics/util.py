@@ -1,6 +1,9 @@
 import time
 import types
 import timeunit
+import sys
+import contextlib
+import collections
 
 
 def issubclass_recursive(child, parent):
@@ -34,3 +37,26 @@ def coalesce(*args):
 def now():
     timeunit.microsecond.to_unit(timeunit.nanosecond, time.time())
 
+
+@contextlib.contextmanager
+def smart_open(filename=None):
+    if filename:
+        fh = open(filename, 'w')
+    else:
+        fh = sys.stdout
+
+    try:
+        yield fh
+    finally:
+        if fh is not sys.stdout:
+            fh.close()
+
+def flatten(d, parent_key='', sep=','):
+    items = []
+    for k, v in d.items():
+        new_key = parent_key + sep + k if parent_key else k
+        if isinstance(v, collections.MutableMapping):
+            items.extend(flatten(v, new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)

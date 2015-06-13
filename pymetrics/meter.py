@@ -1,5 +1,4 @@
 import numpy
-import util
 from duration import Duration
 from counter import Counter
 from timeunit import *
@@ -34,9 +33,9 @@ class Meter(Counter):
         return {
             'mean': {
                 'all': self.mean(when=now),
-                '1': self.mean(when=now, window=Duration(minute, 1)),
-                '5': self.mean(when=now, window=Duration(minute, 5)),
-                '15': self.mean(when=now, window=Duration(minute, 15)),
+                '1 minute': self.mean(when=now, window=Duration(minute, 1)),
+                '5 minutes': self.mean(when=now, window=Duration(minute, 5)),
+                '15 minutes': self.mean(when=now, window=Duration(minute, 15)),
             },
             'median': self.median(),
         }

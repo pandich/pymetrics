@@ -18,3 +18,8 @@ class Counter(Metric):
     def dec(self, amount=1):
         self.inc(-util.coalesce(amount, 0))
         return
+
+    def dump(self):
+        return {
+            'count': self.count,
+        }

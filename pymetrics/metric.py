@@ -1,3 +1,4 @@
+
 class MetricError(Exception):
     def __init__(self):
         return
@@ -41,6 +42,9 @@ class Metric:
 
     def snapshot(self):
         return {k: v for k, v in self.data.items()}
+
+    def dump(self):
+        return {}
 
     def __str__(self):
         output = 'Metric: [name:"{value:s}"]'.format(
