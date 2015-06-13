@@ -2,7 +2,9 @@
   <dictionary name="spandich">
     <words>
       <w>issubclass</w>
+      <w>lookback</w>
       <w>pandich</w>
+      <w>timeunit</w>
     </words>
   </dictionary>
 </component>

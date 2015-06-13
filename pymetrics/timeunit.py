@@ -1,12 +1,12 @@
 import util
 
-class _TimeUnit:
+class TimeUnit:
     def __init__(self, multiplier):
         self.multiplier = multiplier
         return
 
     def from_unit(self, unit, value):
-        if not util.issubclass_recursive(unit, _TimeUnit):
+        if not util.issubclass_recursive(unit, TimeUnit):
             raise TypeError('unit must be a time unit')
 
         if not value:
@@ -16,7 +16,7 @@ class _TimeUnit:
         return value * ratio
 
     def to_unit(self, unit, value):
-        if not util.issubclass_recursive(unit, _TimeUnit):
+        if not util.issubclass_recursive(unit, TimeUnit):
             raise TypeError('unit must be a time unit')
 
         if not value:
@@ -26,50 +26,50 @@ class _TimeUnit:
         return value * ratio
 
 
-class _Nanosecond(_TimeUnit):
+class _Nanosecond(TimeUnit):
     def __init__(self):
-        _TimeUnit.__init__(self, 10.0**9)
+        TimeUnit.__init__(self, 10.0**9)
         return
 
-class _Microsecond(_TimeUnit):
+class _Microsecond(TimeUnit):
     def __init__(self):
-        _TimeUnit.__init__(self, 10.0**6)
+        TimeUnit.__init__(self, 10.0**6)
         return
 
-class _Millisecond(_TimeUnit):
+class _Millisecond(TimeUnit):
     def __init__(self):
-        _TimeUnit.__init__(self, 10.0**3)
+        TimeUnit.__init__(self, 10.0**3)
         return
 
-class _HundredthSecond(_TimeUnit):
+class _HundredthSecond(TimeUnit):
     def __init__(self):
-        _TimeUnit.__init__(self, 10.0**3)
+        TimeUnit.__init__(self, 10.0**3)
         return
 
-class _TenthSecond(_TimeUnit):
+class _TenthSecond(TimeUnit):
     def __init__(self):
-        _TimeUnit.__init__(self, 10.0**1)
+        TimeUnit.__init__(self, 10.0**1)
         return
 
-class _Second(_TimeUnit):
+class _Second(TimeUnit):
     def __init__(self):
-        _TimeUnit.__init__(self, 10.0**0)
+        TimeUnit.__init__(self, 10.0**0)
         return
 
-class _Minute(_TimeUnit):
+class _Minute(TimeUnit):
     def __init__(self):
-        _TimeUnit.__init__(self, 1.0/60.0)
+        TimeUnit.__init__(self, 1.0/60.0)
         return
 
 
-class _Hour(_TimeUnit):
+class _Hour(TimeUnit):
     def __init__(self):
-        _TimeUnit.__init__(self, 1.0/(60.0 * 60.0))
+        TimeUnit.__init__(self, 1.0/(60.0 * 60.0))
         return
 
-class _Day(_TimeUnit):
+class _Day(TimeUnit):
     def __init__(self):
-        _TimeUnit.__init__(self, 1.0/(60.0 * 60.0 * 24.0))
+        TimeUnit.__init__(self, 1.0/(60.0 * 60.0 * 24.0))
         return
 
 nanosecond = _Nanosecond()

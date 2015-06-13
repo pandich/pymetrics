@@ -1,5 +1,6 @@
 import time
 import types
+import timeunit
 
 
 def issubclass_recursive(child, parent):
@@ -31,5 +32,5 @@ def coalesce(*args):
 
 
 def now():
-    return time.time()
+    timeunit.microsecond.to_unit(timeunit.nanosecond, time.time())
 
