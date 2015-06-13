@@ -3,6 +3,7 @@ import unittest
 from pymetrics.core import Registry
 from pymetrics.core import Metric
 from pymetrics.core import Counter
+from pymetrics.core import Meter
 
 
 class Nothing(Metric):
@@ -77,6 +78,22 @@ class TestCounter(unittest.TestCase):
 
         counter.dec(None)
         self.assertEqual(2, counter.count)
+
+
+#
+# COUNTER
+#
+
+class TestMeter(unittest.TestCase):
+    def test_name_and_metric(self):
+        metric = Meter('example')
+        self.assertEqual('meter', metric.metric)
+        self.assertEqual('example', metric.name)
+
+    def test_mark(self):
+        meter = Meter('example')
+        meter.mark()
+
 
 ###
 

@@ -1,5 +1,6 @@
-from util import issubclass_recursive
-from util import coalesce
+import util
+import numpy
+from timeunit import *
 
 
 class MetricError(Exception):
@@ -70,7 +71,7 @@ class Registry:
         if not metric:
             raise MetricValueError('metric', metric)
 
-        if not issubclass_recursive(metric, Metric):
+        if not util.issubclass_recursive(metric, Metric):
             raise MetricTypeError(metric)
 
         self.registry[metric.name] = metric
@@ -92,26 +93,51 @@ class Registry:
 class Counter(Metric):
     def __init__(self, name, initial_count=0):
         Metric.__init__(self, name)
-        self.data['count'] = coalesce(initial_count, 0)
+        self.data['count'] = util.coalesce(initial_count, 0)
 
     @property
     def count(self):
         return self.data['count']
 
     def inc(self, amount=1):
-        self.data['count'] += coalesce(amount, 0)
+        self.data['count'] += util.coalesce(amount, 0)
         return
 
     def dec(self, amount=1):
-        self.inc(-coalesce(amount, 0))
+        self.inc(-util.coalesce(amount, 0))
         return
 
 
 class Meter(Counter):
-    def __init__(self, name, initial_count=0):
+    def __init__(self, name):
         Counter.__init__(self, name)
-        self.data['rate'] = initial_count
+        self.series = numpy.array([])
 
     def mark(self):
         self.inc()
-        return
+        self.series = numpy.append(self.series, util.now())
+
+    def mean(self, when=util.now(), lookback_seconds=None):
+        if lookback_seconds:
+            filtered = (self.series > when - lookback_seconds)
+            return numpy.sum(filtered) / filtered.size
+        else:
+            return numpy.mean(self.series)
+
+    def median(self):
+        return numpy.median(self.series)
+
+    def dump(self):
+        now = util.now()
+        return {
+            'mean': {
+                'all': self.mean(when=now),
+                '1': self.mean(when=now,
+                               lookback_seconds=minute.to_unit(second, 1)),
+                '5': self.mean(when=now,
+                               lookback_seconds=minute.to_unit(second, 5)),
+                '15': self.mean(when=now,
+                                lookback_seconds=minute.to_unit(second, 15)),
+            },
+            'median': self.median(),
+        }

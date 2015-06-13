@@ -1,12 +1,15 @@
-from types import ClassType
+import time
+import types
 
 
 def issubclass_recursive(child, parent):
     if not child or not parent:
         return False
 
-    child_class = child if isinstance(child, ClassType) else child.__class__
-    parent_class = parent if isinstance(parent, ClassType) else parent.__class__
+    child_class = child if isinstance(child,
+                                      types.ClassType) else child.__class__
+    parent_class = parent if isinstance(parent,
+                                        types.ClassType) else parent.__class__
 
     if issubclass(child_class, parent_class):
         return True
@@ -25,3 +28,8 @@ def coalesce(*args):
                 return arg
 
     return None
+
+
+def now():
+    return time.time()
+
