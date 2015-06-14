@@ -6,36 +6,37 @@ from timeunit import *
 class Meter(Counter):
     def __init__(self, name):
         Counter.__init__(self, name)
-        self.series = numpy.array([])
+        self._series = numpy.array([])
+        return
 
     def mark(self):
         self.inc()
-        self.series = numpy.append(self.series, util.now())
+        self._series = numpy.append(self._series, util.now())
+        return
 
-    def mean(self, when=util.now(), window=None):
+    def mean(self, window=None):
         if window:
             if not util.issubclass_recursive(window, Duration):
                 raise TypeError('window must be a duration')
 
             filtered = numpy.where(
-                self.series > when - window.nanonseconds(),
-                self.series,
+                self._series > util.now - window.nanonseconds(),
+                self._series,
             )
             return filtered.mean()
         else:
-            return numpy.mean(self.series)
+            return numpy.mean(self._series)
 
     def median(self):
-        return numpy.median(self.series)
+        return numpy.median(self._series)
 
     def dump(self):
-        now = util.now()
         return {
             'mean': {
-                'all': self.mean(when=now),
-                '1 minute': self.mean(when=now, window=Duration(minute, 1)),
-                '5 minutes': self.mean(when=now, window=Duration(minute, 5)),
-                '15 minutes': self.mean(when=now, window=Duration(minute, 15)),
+                'all': self.mean(),
+                '1 minute': self.mean(Duration(minute, 1)),
+                '5 minutes': self.mean(Duration(minute, 5)),
+                '15 minutes': self.mean(Duration(minute, 15)),
             },
             'median': self.median(),
         }
