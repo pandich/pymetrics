@@ -1,16 +1,15 @@
-import util
 from threading import Thread, Event
 from duration import *
-from timeunit import minute
+from timeunit import seconds
 from registry import Registry
 from time import sleep
+import util
 
-Duration.minutes
-_default_interval = Duration(minute, 1)
 
 class Reporter(Thread):
+    default_interval = Duration(seconds, 30)
 
-    def __init__(self, registry, refresh_interval=_default_interval):
+    def __init__(self, registry, refresh_interval=default_interval):
         Thread.__init__(self, name='metrics-reporter')
         self.stopped = Event()
 
@@ -23,16 +22,17 @@ class Reporter(Thread):
         self._registry = registry
         self.refresh_seconds = refresh_interval.seconds
         self.daemon = True
-
-    def push(self, dump):
         return
 
-    def report(self):
-        dump = {}
-        for name, metric in self._registry.metrics.iteritems():
-            dump[name] = metric.dump()
+    def push(self, dump):
+        raise NotImplementedError
 
-        self.push(dump)
+    def report(self):
+        report_body = {}
+        for name, metric in self._registry.metrics.iteritems():
+            report_body[name] = metric.dump()
+
+        self.push(report_body)
         return
 
     def stop(self):
@@ -43,20 +43,4 @@ class Reporter(Thread):
         while not self.stopped.isSet():
             self.report()
             sleep(self.refresh_seconds)
-        return
-
-
-class CsvReporter(Reporter):
-    def __init__(self, registry, refresh_interval, filename=None):
-        Reporter.__init__(self, registry, refresh_interval)
-        self._filename = filename
-        return
-
-    def push(self, dump):
-        flattened_dump = util.flatten(dump)
-        with util.smart_open(self._filename) as fh:
-            for name, value in flattened_dump.iteritems():
-                line = name + ',' + str(value)
-                print >>fh, line
-
         return

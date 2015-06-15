@@ -1,4 +1,3 @@
-
 class MetricError(Exception):
     def __init__(self):
         return
@@ -26,37 +25,23 @@ class MetricValueError(ValueError, MetricError):
 
 class Metric:
     def __init__(self, name):
-        self.data = {
-            'metric': self.__class__.__name__.lower(),
-            'name': name,
-        }
+        self._name = name
+        self._metric = self.__class__.__name__.lower()
         return
 
     @property
     def name(self):
-        return self.data['name']
+        return self._name
 
     @property
     def metric(self):
-        return self.data['metric']
-
-    def snapshot(self):
-        return {k: v for k, v in self.data.items()}
+        return self._metric
 
     def dump(self):
-        return {}
+        raise NotImplementedError
 
     def __str__(self):
-        output = 'Metric: [name:"{value:s}"]'.format(
-            value=self.data['name']
+        return '{metric:s}: name:"{value:s}"'.format(
+            metric = self._metric,
+            value = self.name,
         )
-
-        for name in sorted(self.data):
-            if name is not 'name':
-                output += ', [{name:s}:"{value:s}"]'.format(
-                    name=name,
-                    value=str(self.data[name]),
-                )
-
-        return output
-

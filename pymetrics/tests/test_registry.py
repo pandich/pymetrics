@@ -1,6 +1,8 @@
 import unittest
 from pymetrics.metric import Metric
-from pymetrics.registry import default as registry
+from pymetrics.registry import Registry
+
+registry = Registry.default
 
 class Nothing(Metric):
     def __init__(self):

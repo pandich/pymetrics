@@ -1,9 +1,34 @@
 import time
 import types
-import timeunit
-import sys
-import contextlib
 import collections
+import numpy
+from timeunit import *
+
+
+class DynamicRecArray(object):
+    def __init__(self, dtype):
+        self.dtype = numpy.dtype(dtype)
+        self.length = 0
+        self.size = 10
+        self._data = numpy.empty(self.size, dtype=self.dtype)
+
+    def __len__(self):
+        return self.length
+
+    def append(self, rec):
+        if self.length == self.size:
+            self.size = int(1.5 * self.size)
+            self._data = numpy.resize(self._data, self.size)
+        self._data[self.length] = rec
+        self.length += 1
+
+    def extend(self, recs):
+        for rec in recs:
+            self.append(rec)
+
+    @property
+    def data(self):
+        return self._data[:self.length]
 
 
 def issubclass_recursive(child, parent):
@@ -35,21 +60,7 @@ def coalesce(*args):
 
 
 def now():
-    timeunit.microsecond.to_unit(timeunit.nanosecond, time.time())
-
-
-@contextlib.contextmanager
-def smart_open(filename=None):
-    if filename:
-        fh = open(filename, 'w')
-    else:
-        fh = sys.stdout
-
-    try:
-        yield fh
-    finally:
-        if fh is not sys.stdout:
-            fh.close()
+    return nanoseconds.from_unit(microseconds, time.time())
 
 def flatten(d, parent_key='', sep=','):
     items = []

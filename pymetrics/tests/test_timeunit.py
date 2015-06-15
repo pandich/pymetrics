@@ -3,7 +3,7 @@ from pymetrics.timeunit import *
 
 class TestTimeUnit(unittest.TestCase):
     def test_minute_to_second(self):
-        self.assertAlmostEqual(60, minute.to_unit(second, 1))
+        self.assertAlmostEqual(60, minutes.to_unit(seconds, 1))
 
 ###
 

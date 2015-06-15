@@ -1,9 +1,7 @@
 import util
 import numpy
 from metric import MetricError
-from counter import Counter
-from duration import Duration
-from timeunit import *
+from statistical_metric import StatisticalMetric
 
 class TimerAlreadyStoppedError(MetricError):
     def __init__(self, name):
@@ -13,85 +11,59 @@ class TimerAlreadyStoppedError(MetricError):
                            ))
         return
 
-class Timer(Counter):
+class Timer(StatisticalMetric):
 
     context_data_type = numpy.dtype([
-        ('start', float),
+        ('time', float),
         ('duration', float),
     ])
 
     class Context:
         def __init__(self, timer):
             self._timer = timer
-            self._start = util.now()
-            self._stop = None
-            self._duration = None
+            self.time = util.now()
+            self.duration = None
+            self.stopped = False
             return
 
         def stop(self):
-            if self._stop:
+            if self.stopped:
                 raise TimerAlreadyStoppedError(self._timer.name)
-            self._stop = util.now()
-            self._duration = self._stop - self._start
+            self.stopped = True
+            self.duration = util.now() - self.time
             self._timer.submit(self)
             return
 
-        @property
-        def start(self):
-            return self._start
-
-        @property
-        def stop(self):
-            return self._stop
-
-        @property
-        def duration(self):
-            return self._duration
-
-        @property
-        def is_stopped(self):
-            return self._stop is not None
-
     def __init__(self, name):
-        Counter.__init__(self, name)
-        self._series = numpy.recarray([], Timer.context_data_type)
+        StatisticalMetric.__init__(
+            self,
+            name,
+            numpy.array([], Timer.context_data_type),
+        )
         return
 
     def submit(self, context):
         self.inc()
-        self._series = numpy.append(self._series, context)
+        self._series = numpy.append(
+            self._series,
+            numpy.array([
+                    (
+                        numpy.float_(context.time),
+                        numpy.float_(context.duration)
+                    )
+            ],
+                dtype=Timer.context_data_type
+            ),
+        )
         return
 
     def time(self):
         self.inc()
         return Timer.Context(self)
 
-    def mean(self, window=None):
-        if window:
-            if not util.issubclass_recursive(window, Duration):
-                raise TypeError('window must be a duration')
+    def values(self):
+        return self.series['duration']
 
-            window_start = numpy.searchsorted(
-                self._series.field('start'),
-                util.now() - window.nanoseconds, side='right'
-            )
-
-            filtered = self._series.field('duration')[window_start, -1]
-            return filtered.mean()
-        else:
-            return numpy.mean(self._series)
-
-    def median(self):
-        return numpy.median(self._series.field('duration'))
-
-    def dump(self):
-        now = util.now()
-        return {
-            'mean': {
-                'all': self.mean(),
-                '1 minute': self.mean(Duration(minute, 1)),
-                '5 minutes': self.mean(Duration(minute, 5)),
-                '15 minutes': self.mean(Duration(minute, 15)),
-            },
-            'median': self.median(),
-        }
+    def values_by_time(self, threshold):
+        filtered = numpy.where(self.series['time'] >= threshold)
+        return self.series[filtered]['duration']
