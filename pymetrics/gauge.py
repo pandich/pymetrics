@@ -2,13 +2,13 @@ from metric import Metric
 
 
 class Gauge(Metric):
-    def __init__(self, name, method):
+    def __init__(self, name, fn):
         Metric.__init__(self, name)
-        self._method_name = method
+        self._fn = fn
         return
 
     def value(self):
-        raise NotImplementedError
+        return self._fn()
 
     def dump(self):
         return {
