@@ -1,7 +1,6 @@
 import util
-import numpy
 from metric import MetricError
-from statistical_metric import StatisticalMetric
+from histogram import Histogram
 
 class TimerAlreadyStoppedError(MetricError):
     def __init__(self, name):
@@ -11,12 +10,7 @@ class TimerAlreadyStoppedError(MetricError):
                            ))
         return
 
-class Timer(StatisticalMetric):
-
-    context_data_type = numpy.dtype([
-        ('time', float),
-        ('duration', float),
-    ])
+class Timer(Histogram):
 
     class Context:
         def __init__(self, timer):
@@ -35,35 +29,16 @@ class Timer(StatisticalMetric):
             return
 
     def __init__(self, name):
-        StatisticalMetric.__init__(
+        Histogram.__init__(
             self,
             name,
-            numpy.array([], Timer.context_data_type),
         )
         return
 
     def submit(self, context):
-        self.inc()
-        self._series = numpy.append(
-            self._series,
-            numpy.array([
-                    (
-                        numpy.float_(context.time),
-                        numpy.float_(context.duration)
-                    )
-            ],
-                dtype=Timer.context_data_type
-            ),
-        )
+        self.update(event_time=context.time, value=context.duration)
         return
 
     def time(self):
         self.inc()
         return Timer.Context(self)
-
-    def values(self):
-        return self.series['duration']
-
-    def values_by_time(self, threshold):
-        filtered = numpy.where(self.series['time'] >= threshold)
-        return self.series[filtered]['duration']
