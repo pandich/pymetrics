@@ -7,6 +7,7 @@ class Gauge(Metric):
         self._fn = fn
         return
 
+    @property
     def value(self):
         return self._fn()
 

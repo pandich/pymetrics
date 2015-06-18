@@ -14,10 +14,10 @@ class TestGauge(unittest.TestCase):
             return a.name
 
         gauge = Gauge('class_name', name)
-        self.assertEqual('example', gauge.value())
+        self.assertEqual('example', gauge.value)
 
         a.name = 'bob'
-        self.assertEqual('bob', gauge.value())
+        self.assertEqual('bob', gauge.value)
 
 
 ###
