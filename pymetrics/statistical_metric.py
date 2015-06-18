@@ -1,8 +1,8 @@
 import util
-import numpy
+import numpy as np
 from counter import Counter
 from duration import Duration
-
+from timeunit import now
 
 class StatisticalMetric(Counter):
 
@@ -23,7 +23,7 @@ class StatisticalMetric(Counter):
         if window:
             if not util.issubclass_recursive(window, Duration):
                 raise TypeError('window must be a duration')
-            threshold = util.now() - window.nanoseconds
+            threshold = now() - window.nanoseconds
 
         return self.values_by_time(threshold).mean()
 
@@ -31,20 +31,20 @@ class StatisticalMetric(Counter):
         return self._series
 
     def values_by_time(self, threshold):
-        return numpy.where(self.series >= threshold)
+        return np.where(self.series >= threshold)
 
     def median(self):
         if not self.series.size:
             return 0
 
-        return numpy.median(self.values())
+        return np.median(self.values())
 
     def percentile(self, q):
         if not self.series.size:
             return 0
 
         print 'v='+str(self.values())
-        return numpy.percentile(self.values(), q)
+        return np.percentile(self.values(), q)
 
     def dump(self):
         return {

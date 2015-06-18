@@ -4,8 +4,8 @@ from metric import Metric
 class HealthCheck(Metric):
 
     class Result:
-        def __init__(self, healthy, message=None):
-            self._healthy = healthy
+        def __init__(self, is_healthy, message=None):
+            self._healthy = is_healthy
             self._message = message
             return
 
@@ -41,7 +41,6 @@ class HealthCheck(Metric):
                 }
             }
         }
-
 
 def healthy():
     return HealthCheck.Result(True)

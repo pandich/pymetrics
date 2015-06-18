@@ -1,13 +1,13 @@
-import util
-import numpy
+import numpy as np
 from statistical_metric import StatisticalMetric
+from timeunit import now
 
 class Meter(StatisticalMetric):
     def __init__(self, name):
-        StatisticalMetric.__init__(self, name, numpy.array([]))
+        StatisticalMetric.__init__(self, name, np.array([]))
         return
 
     def mark(self):
         self.inc()
-        self._series = numpy.append(self._series, util.now())
+        self._series = np.append(self._series, now())
         return

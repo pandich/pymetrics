@@ -13,6 +13,7 @@ class FileReporter(Reporter):
 
     def __del__(self):
         self._fh.close()
+        return
 
     @property
     def filename(self):

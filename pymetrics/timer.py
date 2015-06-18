@@ -1,6 +1,6 @@
-import util
 from metric import MetricError
 from histogram import Histogram
+from timeunit import now
 
 class TimerAlreadyStoppedError(MetricError):
     def __init__(self, name):
@@ -15,7 +15,7 @@ class Timer(Histogram):
     class Context:
         def __init__(self, timer):
             self._timer = timer
-            self.time = util.now()
+            self.time = now()
             self.duration = None
             self.stopped = False
             return
@@ -24,7 +24,7 @@ class Timer(Histogram):
             if self.stopped:
                 raise TimerAlreadyStoppedError(self._timer.name)
             self.stopped = True
-            self.duration = util.now() - self.time
+            self.duration = now() - self.time
             self._timer.submit(self)
             return
 

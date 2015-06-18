@@ -1,4 +1,5 @@
 import util
+import time
 
 class TimeUnit:
     def __init__(self, multiplier):
@@ -81,3 +82,7 @@ seconds = _Second()
 minutes = _Minute()
 hours = _Hour()
 days = _Day()
+
+
+def now():
+    return nanoseconds.from_unit(microseconds, time.time())
