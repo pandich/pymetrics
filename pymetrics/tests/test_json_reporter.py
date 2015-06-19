@@ -23,10 +23,6 @@ class TestJsonReporter(unittest.TestCase):
         return 'hi'
 
     def test_a(self):
-        c = Counter(name('some', 'example', 1))
-        registry.register(c)
-        t = Timer('time')
-        registry.register(t)
         reporter = JsonReporter(
             registry,
             refresh_interval=Duration.from_seconds(2),
@@ -36,15 +32,9 @@ class TestJsonReporter(unittest.TestCase):
         for x in range(1, 10):
             self.joe()
             self.bob()
-            context = t.time()
-            try:
-                sleep(1)
-                c.inc(x)
-            finally:
-                context.stop()
+            sleep(1)
 
         reporter.stop()
-
 
 ###
 

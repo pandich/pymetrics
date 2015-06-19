@@ -1,5 +1,5 @@
 import numpy as np
-from metric import MetricError, metric_decorator_name, metric_decorator_registry
+from metric import MetricError, metric_decorated
 from histogram import Histogram
 from timeunit import now
 
@@ -47,26 +47,19 @@ class Timer(Histogram):
         return Timer.Context(self)
 
 def timed(target=None, **options):
-    if not target:
-        def inner(inner_target):
-            return timed(inner_target, **options)
-        return inner
+    def before(timer):
+        return timer.time()
 
-    target_registry = metric_decorator_registry(**options)
-    metric_name = metric_decorator_name(Timer, target, **options)
-    timer = target_registry.register(Timer(metric_name))
+    # noinspection PyUnusedLocal
+    def after(timer, timer_context, function_result, exception):
+        timer_context.stop()
+        return
 
-    def decorator(func):
-        names = getattr(func, '_names', None)
-
-        def decorated(*args, **kwargs):
-            context = timer.time()
-            try:
-                return func(*args, **kwargs)
-            finally:
-                context.stop()
-
-        decorated._names = names
-        return decorated
-
-    return decorator
+    return metric_decorated(
+        cls=Timer,
+        handler=timed,
+        before=before,
+        after=after,
+        target=target,
+        **options
+    )

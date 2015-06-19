@@ -56,3 +56,45 @@ def metric_decorator_name(metric, target, **options):
 
 def metric_decorator_registry(**options):
     return getattr(options, 'registry', registry.registry)
+
+
+# TODO handle metric-specific arguments
+def metric_decorated(
+        cls=None,
+        handler=None,
+        before=None,
+        after=None,
+        target=None,
+        **options
+):
+    if not target:
+        def inner(inner_target):
+            return handler(inner_target, **options)
+        return inner
+
+    target_registry = metric_decorator_registry(**options)
+    metric_name = metric_decorator_name(cls, target, **options)
+    metric = target_registry.register(cls(metric_name))
+
+    def decorator(func):
+        def decorated(*args, **kwargs):
+            print '----------------------------------'
+            before_result = before(metric) if before else None
+            exception = None
+            function_result = None
+            try:
+                function_result = func(*args, **kwargs)
+            except BaseException as e:
+                exception = e
+            finally:
+                if after:
+                    after(metric, before_result, function_result, exception)
+            if exception:
+                raise exception
+
+            return function_result
+
+        decorated._names = getattr(func, '_names', None)
+        return decorated
+
+    return decorator
