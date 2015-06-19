@@ -3,6 +3,7 @@ import random
 from time import sleep
 from pymetrics.counter import Counter
 from pymetrics.timer import Timer, timed
+from pymetrics.meter import metered
 from pymetrics.registry import registry, name
 from pymetrics.json_reporter import JsonReporter
 from pymetrics.duration import Duration
@@ -16,6 +17,7 @@ class TestJsonReporter(unittest.TestCase):
         return 'hi'
 
     @timed(metric_prefix='hey')
+    @metered
     def joe(self):
         sleep(random.random())
         return 'hi'
