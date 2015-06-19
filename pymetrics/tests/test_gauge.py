@@ -13,7 +13,7 @@ class TestGauge(unittest.TestCase):
         def name():
             return a.name
 
-        gauge = Gauge('class_name', name)
+        gauge = Gauge('class_name')
         self.assertEqual('example', gauge.value)
 
         a.name = 'bob'

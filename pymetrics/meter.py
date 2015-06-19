@@ -4,7 +4,7 @@ from timeunit import now
 
 class Meter(StatisticalMetric):
     def __init__(self, name):
-        StatisticalMetric.__init__(self, name, np.array([]))
+        StatisticalMetric.__init__(self, name)
         return
 
     def mark(self):

@@ -1,3 +1,6 @@
+import registry
+from util import coalesce
+
 class MetricError(Exception):
     def __init__(self):
         return
@@ -23,7 +26,7 @@ class MetricValueError(ValueError, MetricError):
         return
 
 
-class Metric:
+class Metric(object):
     def __init__(self, name):
         self._name = name
         self._metric = self.__class__.__name__.lower()
@@ -45,3 +48,11 @@ class Metric:
             metric = self._metric,
             value = self.name,
         )
+
+def metric_decorator_name(metric, target, **options):
+    name = coalesce(options.get('metric_name'), target.__name__)
+    prefix = coalesce(options.get('metric_prefix'), metric.__name__.lower())
+    return registry.name(prefix, name)
+
+def metric_decorator_registry(**options):
+    return getattr(options, 'registry', registry.registry)

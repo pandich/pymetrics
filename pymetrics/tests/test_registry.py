@@ -4,7 +4,7 @@ from pymetrics.registry import Registry
 
 class Nothing(Metric):
     def __init__(self):
-        Metric.__init__(self, 'test')
+        Metric.__init__(self)
 
 
 class TestCoreRegistry(unittest.TestCase):

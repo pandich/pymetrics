@@ -4,7 +4,7 @@ from pymetrics.metric import Metric
 
 class Nothing(Metric):
     def __init__(self):
-        Metric.__init__(self, 'test')
+        Metric.__init__(self)
 
 class TestMetric(unittest.TestCase):
     def test_name_and_metric(self):

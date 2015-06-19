@@ -19,11 +19,7 @@ class StatisticalMetric(Counter):
         if not self.series.size:
             return 0
 
-        threshold = 0
-        if window:
-            if not util.issubclass_recursive(window, Duration):
-                raise TypeError('window must be a duration')
-            threshold = now() - window.nanoseconds
+        threshold = now() - window.nanoseconds if window else 0
 
         return self.values_by_time(threshold).mean()
 
@@ -43,7 +39,6 @@ class StatisticalMetric(Counter):
         if not self.series.size:
             return 0
 
-        print 'v='+str(self.values())
         return np.percentile(self.values(), q)
 
     def dump(self):

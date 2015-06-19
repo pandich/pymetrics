@@ -12,12 +12,8 @@ class Histogram(StatisticalMetric):
         (value_key, float),
     ])
 
-    def __init__(self, name):
-        StatisticalMetric.__init__(
-            self,
-            name,
-            np.array([], Histogram.record_type),
-        )
+    def __init__(self, name, series):
+        StatisticalMetric.__init__(self, name, series)
         return
 
     def update(self, event_time=now(), value=None):

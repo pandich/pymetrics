@@ -3,7 +3,7 @@ from metric import *
 from frozendict import frozendict
 from string import join
 
-class Registry:
+class Registry(object):
     _id = 0
     _registries = dict()
 
@@ -32,11 +32,8 @@ class Registry:
         if not metric:
             raise MetricValueError('metric', metric)
 
-        if not util.issubclass_recursive(metric, Metric):
-            raise MetricTypeError(metric)
-
         self._metrics[metric.name] = metric
-        return
+        return metric
 
     @property
     def metrics(self):

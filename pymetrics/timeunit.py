@@ -1,15 +1,12 @@
 import util
 import time
 
-class TimeUnit:
+class TimeUnit(object):
     def __init__(self, multiplier):
         self.multiplier = multiplier
         return
 
     def from_unit(self, unit, value):
-        if not util.issubclass_recursive(unit, TimeUnit):
-            raise TypeError('unit must be a time unit')
-
         if not value:
             return value
 
@@ -17,9 +14,6 @@ class TimeUnit:
         return value * ratio
 
     def to_unit(self, unit, value):
-        if not util.issubclass_recursive(unit, TimeUnit):
-            raise TypeError('unit must be a time unit')
-
         if not value:
             return value
 

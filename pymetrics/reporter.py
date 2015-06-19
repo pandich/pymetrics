@@ -12,13 +12,6 @@ class Reporter(Thread):
     def __init__(self, registry, refresh_interval=default_interval):
         Thread.__init__(self, name='metrics-reporter')
         self.stopped = Event()
-
-        if not util.issubclass_recursive(refresh_interval, Duration):
-            raise ValueError('refresh interval must be a duration')
-
-        if not util.issubclass_recursive(registry, Registry):
-            raise ValueError('registry must be a registry')
-
         self._registry = registry
         self.refresh_seconds = refresh_interval.seconds
         self.daemon = True

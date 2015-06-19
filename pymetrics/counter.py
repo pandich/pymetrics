@@ -1,8 +1,12 @@
 import util
+import logging
 from metric import Metric
 
 
 class Counter(Metric):
+
+    logger = logging.getLogger(__name__)
+
     def __init__(self, name, initial_count=0):
         Metric.__init__(self, name)
         self._count = util.coalesce(initial_count, 0)

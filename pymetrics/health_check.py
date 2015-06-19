@@ -1,3 +1,4 @@
+import timeunit
 import util
 from metric import Metric
 
@@ -29,7 +30,7 @@ class HealthCheck(Metric):
         raise NotImplementedError
 
     def dump(self):
-        when = util.now()
+        when = timeunit.now()
         health = self.check()
 
         return {

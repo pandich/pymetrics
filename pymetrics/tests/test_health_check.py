@@ -2,8 +2,8 @@ import unittest
 from pymetrics.health_check import HealthCheck, healthy, unhealthy
 
 class FakeHealthCheck(HealthCheck):
-    def __init__(self, good=True):
-        HealthCheck.__init__(self, 'fake')
+    def __init__(self, name):
+        HealthCheck.__init__(self)
         self.healthy = good
         return
 

@@ -1,7 +1,7 @@
 from timeunit import *
 import util
 
-class Duration:
+class Duration(object):
 
     @staticmethod
     def from_nanoseconds(t):
@@ -40,9 +40,6 @@ class Duration:
         return Duration(days, t)
 
     def __init__(self, unit, value):
-        if not util.issubclass_recursive(unit, TimeUnit):
-            raise TypeError('unit must be a time unit')
-
         if value is None:
             raise ValueError('value must not be None')
 
