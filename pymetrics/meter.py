@@ -4,17 +4,16 @@ from metric import metric_decorator_registry, metric_decorator_name, metric_deco
 from statistical_metric import StatisticalMetric
 from timeunit import now
 
-class Meter(StatisticalMetric):
+class Meter(Histogram):
     def __init__(self, name):
         StatisticalMetric.__init__(
             self,
             name,
-            np.array([], Histogram.record_type)
+            np.array([])
         )
         return
 
     def mark(self):
-        print 'mark!!!!!!!!!!!!!!!!!!!!!!!!11111'
         self.inc()
         self._series = np.append(self._series, now())
         return

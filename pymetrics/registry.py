@@ -39,6 +39,9 @@ class Registry(object):
     def metrics(self):
         return frozendict(self._metrics)
 
+    def get(self, name):
+        return self._metrics.get(name)
+
     def __str__(self):
         output = '[\n'
 
