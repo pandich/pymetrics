@@ -57,14 +57,95 @@ def metric_decorator_name(metric, target, **options):
 def metric_decorator_registry(**options):
     return getattr(options, 'registry', registry.registry)
 
+class BeforeDecoratorRecord(object):
+    def __init__(self, metric):
+        self._metric = metric
+        return
+
+    @property
+    def metric(self):
+        return self._metric
+
+    @property
+    def counter(self):
+        return self._metric
+
+    @property
+    def gauge(self):
+        return self._metric
+
+    @property
+    def health_check(self):
+        return self._metric
+
+    @property
+    def histogram(self):
+        return self._metric
+
+    @property
+    def meter(self):
+        return self._metric
+
+    @property
+    def timer(self):
+        return self._metric
+
+
+class AfterDecoratedRecord(object):
+    def __init__(self, metric, before, result, exception):
+        self._metric = metric
+        self._before = before
+        self._result = result
+        self._exception = exception
+
+    @property
+    def metric(self):
+        return self._metric
+
+    @property
+    def counter(self):
+        return self._metric
+
+    @property
+    def gauge(self):
+        return self._metric
+
+    @property
+    def health_check(self):
+        return self._metric
+
+    @property
+    def histogram(self):
+        return self._metric
+
+    @property
+    def meter(self):
+        return self._metric
+
+    @property
+    def timer(self):
+        return self._metric
+
+    @property
+    def before(self):
+        return self._before
+
+    @property
+    def result(self):
+        return self._result
+
+    @property
+    def exception(self):
+        return self._exception
+
 
 # TODO handle metric-specific arguments
 def metric_decorated(
-        cls=None,
-        handler=None,
+        target,
+        cls,
+        handler,
         before=None,
         after=None,
-        target=None,
         **options
 ):
     if not target:
@@ -76,25 +157,29 @@ def metric_decorated(
     metric_name = metric_decorator_name(cls, target, **options)
     metric = target_registry.register(cls(metric_name))
 
-    def decorator(func):
-        def decorated(*args, **kwargs):
-            print '----------------------------------'
-            before_result = before(metric) if before else None
-            exception = None
-            function_result = None
-            try:
-                function_result = func(*args, **kwargs)
-            except BaseException as e:
-                exception = e
-            finally:
-                if after:
-                    after(metric, before_result, function_result, exception)
-            if exception:
-                raise exception
+    def decorated(*args, **kwargs):
+        before_result = before(
+            BeforeDecoratorRecord(metric)
+        ) if before else None
+        exception = None
+        function_result = None
+        try:
+            function_result = target(*args, **kwargs)
+        except BaseException as e:
+            exception = e
+        finally:
+            if after:
+                after(AfterDecoratedRecord(
+                    metric,
+                    before_result,
+                    function_result,
+                    exception
+                ))
 
-            return function_result
+        if exception:
+            raise exception
 
-        decorated._names = getattr(func, '_names', None)
-        return decorated
+        return function_result
 
-    return decorator
+    decorated._names = getattr(target, '_names', None)
+    return decorated

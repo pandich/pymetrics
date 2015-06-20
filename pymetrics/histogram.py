@@ -2,8 +2,8 @@ import numpy as np
 from statistical_metric import StatisticalMetric
 from timeunit import now
 
-value_key = 'value'
 time_key = 'time'
+value_key = 'value'
 
 class Histogram(StatisticalMetric):
 
@@ -12,8 +12,8 @@ class Histogram(StatisticalMetric):
         (value_key, float),
     ])
 
-    def __init__(self, name, series):
-        StatisticalMetric.__init__(self, name, series)
+    def __init__(self, name, dtype=record_type):
+        StatisticalMetric.__init__(self, name, series=np.array([], dtype=dtype))
         return
 
     def update(self, event_time=now(), value=None):
@@ -28,13 +28,13 @@ class Histogram(StatisticalMetric):
                     event_time,
                     value,
                 ),
-            ], dtype=Histogram.record_type)
+            ], dtype=self._series.dtype)
         )
         return
 
     def values(self):
-        return self.series[value_key]
+        return self._series[value_key]
 
     def values_by_time(self, threshold):
-        filtered = np.where(self.series[time_key] >= threshold)
-        return self.series[filtered][value_key]
+        filtered = np.where(self._series[time_key] >= threshold)
+        return self._series[filtered][value_key]

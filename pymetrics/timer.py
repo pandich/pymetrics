@@ -31,11 +31,7 @@ class Timer(Histogram):
             return
 
     def __init__(self, name):
-        Histogram.__init__(
-            self,
-            name,
-            np.array([], dtype=Histogram.record_type)
-        )
+        Histogram.__init__(self, name)
         return
 
     def submit(self, context):
@@ -47,19 +43,18 @@ class Timer(Histogram):
         return Timer.Context(self)
 
 def timed(target=None, **options):
-    def before(timer):
-        return timer.time()
+    def before(record):
+        return record.timer.time()
 
-    # noinspection PyUnusedLocal
-    def after(timer, timer_context, function_result, exception):
-        timer_context.stop()
+    def after(record):
+        record.before.stop()
         return
 
     return metric_decorated(
-        cls=Timer,
-        handler=timed,
+        target,
+        Timer,
+        timed,
         before=before,
         after=after,
-        target=target,
         **options
     )

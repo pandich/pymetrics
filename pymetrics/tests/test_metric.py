@@ -1,10 +1,12 @@
 import unittest
 from pymetrics.metric import Metric
 
-
 class Nothing(Metric):
+    def dump(self):
+        pass
+
     def __init__(self):
-        Metric.__init__(self)
+        Metric.__init__(self, 'nothing')
 
 class TestMetric(unittest.TestCase):
     def test_name_and_metric(self):

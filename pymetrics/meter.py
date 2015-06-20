@@ -1,6 +1,6 @@
 import numpy as np
 from histogram import Histogram
-from metric import metric_decorator_registry, metric_decorator_name, metric_decorated
+from metric import metric_decorated
 from statistical_metric import StatisticalMetric
 from timeunit import now
 
@@ -20,14 +20,14 @@ class Meter(Histogram):
 
 
 def metered(target=None, **options):
-    def before(meter):
-        meter.mark()
+    def before(record):
+        record.meter.mark()
         return
 
     return metric_decorated(
-        cls=Meter,
-        handler=metered,
+        target,
+        Meter,
+        metered,
         before=before,
-        target=target,
         **options
     )
