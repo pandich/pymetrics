@@ -1,4 +1,5 @@
 import numpy as np
+from metric import metric_decorated
 from statistical_metric import StatisticalMetric
 from timeunit import now
 
@@ -38,3 +39,16 @@ class Histogram(StatisticalMetric):
     def values_by_time(self, threshold):
         filtered = np.where(self._series[time_key] >= threshold)
         return self._series[filtered][value_key]
+
+def histogrammed(target=None, **options):
+    def after(record):
+        record.histogram.update(record.result)
+        return
+
+    return metric_decorated(
+        target,
+        Histogram,
+        histogrammed,
+        after=after,
+        **options
+    )

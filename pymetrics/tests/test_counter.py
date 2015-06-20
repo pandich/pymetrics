@@ -7,14 +7,6 @@ class TestCounter(unittest.TestCase):
         self.assertEqual('counter', metric.metric)
         self.assertEqual('example', metric.name)
 
-    def test_initial_value(self):
-        counter = Counter('example')
-        self.assertEqual(10, counter.count)
-
-    def test_initial_value_None(self):
-        counter = Counter('example')
-        self.assertEqual(0, counter.count)
-
     def test_value(self):
         counter = Counter('example')
         self.assertEqual(0, counter.count)

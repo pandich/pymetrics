@@ -1,15 +1,15 @@
 import util
 import logging
-from metric import Metric
+from metric import Metric, metric_decorated
 
 
 class Counter(Metric):
 
     logger = logging.getLogger(__name__)
 
-    def __init__(self, name, initial_count=0):
+    def __init__(self, name):
         Metric.__init__(self, name)
-        self._count = util.coalesce(initial_count, 0)
+        self._count = 0
         return
 
     @property
@@ -28,3 +28,16 @@ class Counter(Metric):
         return {
             'count': self.count,
         }
+
+def counted(target=None, **options):
+    def before(record):
+        record.counter.inc()
+        return
+
+    return metric_decorated(
+        target,
+        Counter,
+        counted,
+        before=before,
+        **options
+    )

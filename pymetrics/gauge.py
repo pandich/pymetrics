@@ -1,4 +1,4 @@
-from metric import Metric
+from metric import Metric, metric_decorator_name, metric_decorator_registry
 
 
 class Gauge(Metric):
@@ -15,3 +15,19 @@ class Gauge(Metric):
         return {
             self.name: self.value()
         }
+
+def gauged(
+        target,
+        **options
+):
+    if not target:
+        def inner(inner_target):
+            return gauged(inner_target, **options)
+
+        return inner
+
+    target_registry = metric_decorator_registry(**options)
+    metric_name = metric_decorator_name(Gauge, target, **options)
+    target_registry.register(Gauge(metric_name, target))
+
+    return target
