@@ -18,6 +18,10 @@ class Meter(Histogram):
         self._series = np.append(self._series, now())
         return
 
+    def __enter__(self):
+        self.mark()
+        return
+
 def metered(target=None, **options):
     def before(record):
         record.meter.mark()

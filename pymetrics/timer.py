@@ -42,6 +42,15 @@ class Timer(Histogram):
         self.inc()
         return Timer.Context(self)
 
+    def __enter__(self):
+        self.__context = self.time()
+        return
+
+    def __exit__(self, value_type, value, traceback):
+        self.__context.stop()
+        self.__context = None
+        return
+
 def timed(target=None, **options):
     def before(record):
         return record.timer.time()

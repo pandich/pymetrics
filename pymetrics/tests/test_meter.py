@@ -1,6 +1,6 @@
 import unittest
 from pymetrics.meter import Meter, metered
-from pymetrics.registry import registry
+from pymetrics.registry import registry, name
 
 @metered
 def example():
@@ -23,6 +23,13 @@ class TestMeter(unittest.TestCase):
         self.assertEqual(meter.count, 1)
         example()
         self.assertEqual(meter.count, 2)
+
+    def test_with(self):
+        meter = Meter(name('example'))
+        self.assertEquals(meter.count, 0)
+        with meter:
+            pass
+        self.assertEquals(meter.count, 1)
 
 ###
 

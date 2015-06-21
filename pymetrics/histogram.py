@@ -40,6 +40,10 @@ class Histogram(StatisticalMetric):
         filtered = np.where(self._series[time_key] >= threshold)
         return self._series[filtered][value_key]
 
+    def __exit__(self, value_type, value, traceback):
+        self.update(value)
+        return
+
 def histogrammed(target=None, **options):
     def after(record):
         record.histogram.update(record.result)

@@ -43,6 +43,12 @@ class Metric(object):
     def dump(self):
         raise NotImplementedError
 
+    def __enter__(self):
+        return
+
+    def __exit__(self, value_type, value, traceback):
+        return
+
     def __str__(self):
         return '{metric:s}: name:"{value:s}"'.format(
             metric = self._metric,

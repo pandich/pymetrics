@@ -29,6 +29,13 @@ class TestCounter(unittest.TestCase):
         counter.dec(None)
         self.assertEqual(2, counter.count)
 
+    def test_with(self):
+        counter = Counter('example')
+        self.assertEquals(counter.count, 0)
+        with counter:
+            pass
+        self.assertEquals(counter.count, 1)
+
 
 ###
 

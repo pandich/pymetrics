@@ -13,7 +13,7 @@ class Gauge(Metric):
 
     def dump(self):
         return {
-            self.name: self.value()
+            self.name: self.value
         }
 
 def gauged(

@@ -29,6 +29,10 @@ class Counter(Metric):
             'count': self.count,
         }
 
+    def __enter__(self):
+        self.inc()
+        return
+
 def counted(target=None, **options):
     def before(record):
         record.counter.inc()
