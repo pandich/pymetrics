@@ -1,4 +1,3 @@
-import util
 from metric import *
 from frozendict import frozendict
 from string import join
@@ -22,8 +21,7 @@ class Registry(object):
         self._metrics = {}
         self._id = self._id
         self._id += 1
-        self._name = util.coalesce(registry_name,
-                                   'registry-{id:02d}'.format(id=self._id))
+        self._name = registry_name or 'registry-{id:02d}'.format(id=self._id)
         return
 
     @property

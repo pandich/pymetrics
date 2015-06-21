@@ -1,13 +1,14 @@
 import numpy as np
+import traceback
 from counter import Counter
 from duration import Duration
 from timeunit import now
 
 
 class StatisticalMetric(Counter):
-    def __init__(self, name, series):
+    def __init__(self, name, dtype=None):
         Counter.__init__(self, name)
-        self._series = series
+        self._series = np.array([], dtype=dtype)
         return
 
     @property
@@ -20,7 +21,8 @@ class StatisticalMetric(Counter):
 
         threshold = now() - window.nanoseconds if window else 0
 
-        return self.values_by_time(threshold).mean()
+        filtered_values = self.values_by_time(threshold)
+        return filtered_values.mean()
 
     def values(self):
         return self._series
@@ -39,6 +41,14 @@ class StatisticalMetric(Counter):
             return 0
 
         return np.percentile(self.values(), q)
+
+    def append(self, record):
+        self.inc()
+        self._series = np.append(
+            self._series,
+            np.array([record], dtype=self._series.dtype)
+        )
+        return
 
     def dump(self):
         return {

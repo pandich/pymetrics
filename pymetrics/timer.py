@@ -30,6 +30,14 @@ class Timer(Histogram):
             self._timer.submit(self)
             return
 
+        def __enter__(self):
+            return
+
+        # noinspection PyUnusedLocal
+        def __exit__(self, *unused):
+            self.stop()
+            return
+
     def __init__(self, name):
         Histogram.__init__(self, name)
         return
@@ -41,15 +49,6 @@ class Timer(Histogram):
     def time(self):
         self.inc()
         return Timer.Context(self)
-
-    def __enter__(self):
-        self.__context = self.time()
-        return
-
-    def __exit__(self, value_type, value, traceback):
-        self.__context.stop()
-        self.__context = None
-        return
 
 
 def timed(target=None, **options):

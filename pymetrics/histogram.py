@@ -10,29 +10,17 @@ value_key = 'value'
 
 class Histogram(StatisticalMetric):
 
-    record_type = np.dtype([
+    time_series_dtype = np.dtype([
         (time_key, float),
         (value_key, float),
     ])
 
-    def __init__(self, name, dtype=record_type):
-        StatisticalMetric.__init__(self, name, series=np.array([], dtype=dtype))
+    def __init__(self, name, dtype=time_series_dtype):
+        StatisticalMetric.__init__(self, name, dtype)
         return
 
-    def update(self, event_time=now(), value=None):
-        if value is None:
-            return
-
-        self.inc()
-        self._series = np.append(
-            self._series,
-            np.array([
-                (
-                    event_time,
-                    value,
-                ),
-            ], dtype=self._series.dtype)
-        )
+    def update(self, event_time=None, value=None):
+        self.append((event_time or now(), value or 1))
         return
 
     def values(self):

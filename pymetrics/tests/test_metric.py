@@ -6,7 +6,7 @@ class Nothing(Metric):
         pass
 
     def __init__(self):
-        Metric.__init__(self, 'nothing')
+        Metric.__init__(self, 'test')
 
 class TestMetric(unittest.TestCase):
     def test_name_and_metric(self):

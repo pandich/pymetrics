@@ -1,5 +1,4 @@
 import timeunit
-import util
 from metric import Metric
 
 
@@ -39,7 +38,7 @@ class HealthCheck(Metric):
                 'result': {
                     'time': when,
                     'healthy': health.healthy,
-                    'message': util.coalesce(health.message, ''),
+                    'message': health.message or '',
                 }
             }
         }

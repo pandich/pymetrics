@@ -75,6 +75,10 @@ class _Day(TimeUnit):
         return
 
 
+#
+# singletons
+#
+
 nanoseconds = _Nanosecond()
 microseconds = _Microsecond()
 milliseconds = _Millisecond()
@@ -86,5 +90,6 @@ hours = _Hour()
 days = _Day()
 
 
+# TODO how to get nanosecond resolution
 def now():
     return nanoseconds.from_unit(microseconds, time.time())

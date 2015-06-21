@@ -4,7 +4,7 @@ from pymetrics.registry import Registry, name
 
 class Nothing(Metric):
     def __init__(self):
-        Metric.__init__(self)
+        Metric.__init__(self, 'nothing')
 
     def dump(self):
         return {}
@@ -24,7 +24,9 @@ class TestCoreRegistry(unittest.TestCase):
 
     def test_to_string(self):
         self.registry.register(Nothing())
-        self.assertGreater(str(self.registry).index('name:"test"'), 0)
+        print self.registry.metrics
+        self.assertIsNone(self.registry.get('not_there'))
+        self.assertIsNotNone(self.registry.get('nothing'))
 
     def test_name(self):
         self.assertEquals(name('a'), 'a')

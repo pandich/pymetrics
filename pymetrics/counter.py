@@ -1,11 +1,7 @@
-import util
-import logging
 from metric import Metric, metric_decorated
 
 
 class Counter(Metric):
-
-    logger = logging.getLogger(__name__)
 
     def __init__(self, name):
         Metric.__init__(self, name)
@@ -17,11 +13,11 @@ class Counter(Metric):
         return self._count
 
     def inc(self, amount=1):
-        self._count += util.coalesce(amount, 0)
+        self._count += amount or 0
         return
 
     def dec(self, amount=1):
-        self.inc(-util.coalesce(amount, 0))
+        self.inc(-(amount or 0))
         return
 
     def dump(self):

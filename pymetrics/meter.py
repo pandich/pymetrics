@@ -1,22 +1,14 @@
-import numpy as np
 from histogram import Histogram
 from metric import metric_decorated
-from statistical_metric import StatisticalMetric
-from timeunit import now
 
 
 class Meter(Histogram):
     def __init__(self, name):
-        StatisticalMetric.__init__(
-            self,
-            name,
-            np.array([])
-        )
+        Histogram.__init__(self, name)
         return
 
     def mark(self):
-        self.inc()
-        self._series = np.append(self._series, now())
+        self.update()
         return
 
     def __enter__(self):

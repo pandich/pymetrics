@@ -1,10 +1,11 @@
 import registry
-from util import coalesce
+import logging
 
 
 def metric_decorator_name(metric, target, **options):
-    name = coalesce(options.get('metric_name'), target.__name__)
-    prefix = coalesce(options.get('metric_prefix'), metric.__name__.lower())
+
+    name = options.get('metric_name') or target.__name__
+    prefix = options.get('metric_prefix') or metric.__name__.lower()
     return registry.name(prefix, name)
 
 
@@ -38,9 +39,11 @@ class MetricValueError(ValueError, MetricError):
 
 
 class Metric(object):
+
     def __init__(self, name):
         self._name = name
         self._metric = self.__class__.__name__.lower()
+        self.logger = logging.getLogger(__name__)
         return
 
     @property
