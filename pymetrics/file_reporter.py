@@ -1,6 +1,7 @@
 import sys
 from reporter import Reporter
 
+
 class FileReporter(Reporter):
     def __init__(self, registry, refresh_interval, filename=None):
         Reporter.__init__(self, registry, refresh_interval)

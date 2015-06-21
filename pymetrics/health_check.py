@@ -2,6 +2,7 @@ import timeunit
 import util
 from metric import Metric
 
+
 class HealthCheck(Metric):
 
     class Result:
@@ -43,9 +44,9 @@ class HealthCheck(Metric):
             }
         }
 
+
 def healthy():
     return HealthCheck.Result(True)
-
 
 def unhealthy(message=None):
     return HealthCheck.Result(False, message)

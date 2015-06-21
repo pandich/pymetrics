@@ -1,5 +1,5 @@
-import util
 import time
+
 
 class TimeUnit(object):
     def __init__(self, multiplier):
@@ -26,30 +26,36 @@ class _Nanosecond(TimeUnit):
         TimeUnit.__init__(self, 10.0**9)
         return
 
+
 class _Microsecond(TimeUnit):
     def __init__(self):
         TimeUnit.__init__(self, 10.0**6)
         return
+
 
 class _Millisecond(TimeUnit):
     def __init__(self):
         TimeUnit.__init__(self, 10.0**3)
         return
 
+
 class _HundredthSecond(TimeUnit):
     def __init__(self):
         TimeUnit.__init__(self, 10.0**3)
         return
+
 
 class _TenthSecond(TimeUnit):
     def __init__(self):
         TimeUnit.__init__(self, 10.0**1)
         return
 
+
 class _Second(TimeUnit):
     def __init__(self):
         TimeUnit.__init__(self, 10.0**0)
         return
+
 
 class _Minute(TimeUnit):
     def __init__(self):
@@ -62,10 +68,12 @@ class _Hour(TimeUnit):
         TimeUnit.__init__(self, 1.0/(60.0 * 60.0))
         return
 
+
 class _Day(TimeUnit):
     def __init__(self):
         TimeUnit.__init__(self, 1.0/(60.0 * 60.0 * 24.0))
         return
+
 
 nanoseconds = _Nanosecond()
 microseconds = _Microsecond()

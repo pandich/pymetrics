@@ -1,5 +1,5 @@
 from timeunit import *
-import util
+
 
 class Duration(object):
 

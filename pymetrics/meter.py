@@ -4,6 +4,7 @@ from metric import metric_decorated
 from statistical_metric import StatisticalMetric
 from timeunit import now
 
+
 class Meter(Histogram):
     def __init__(self, name):
         StatisticalMetric.__init__(
@@ -21,6 +22,7 @@ class Meter(Histogram):
     def __enter__(self):
         self.mark()
         return
+
 
 def metered(target=None, **options):
     def before(record):

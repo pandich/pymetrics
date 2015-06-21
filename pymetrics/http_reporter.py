@@ -2,7 +2,9 @@ import json
 from reporter import Reporter
 from flask import Flask
 
+
 app = Flask(__name__)
+
 
 class HttpReporter(Reporter):
     def __init__(self, registry, host='0.0.0.0', port=9091):

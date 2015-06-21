@@ -3,8 +3,10 @@ from metric import metric_decorated
 from statistical_metric import StatisticalMetric
 from timeunit import now
 
+
 time_key = 'time'
 value_key = 'value'
+
 
 class Histogram(StatisticalMetric):
 
@@ -43,6 +45,7 @@ class Histogram(StatisticalMetric):
     def __exit__(self, value_type, value, traceback):
         self.update(value)
         return
+
 
 def histogrammed(target=None, **options):
     def after(record):

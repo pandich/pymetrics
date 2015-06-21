@@ -1,4 +1,3 @@
-import numpy as np
 from metric import MetricError, metric_decorated
 from histogram import Histogram
 from timeunit import now
@@ -11,6 +10,7 @@ class TimerAlreadyStoppedError(MetricError):
                                name=name,
                            ))
         return
+
 
 class Timer(Histogram):
 
@@ -50,6 +50,7 @@ class Timer(Histogram):
         self.__context.stop()
         self.__context = None
         return
+
 
 def timed(target=None, **options):
     def before(record):

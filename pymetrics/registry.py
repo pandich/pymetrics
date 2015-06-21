@@ -2,6 +2,8 @@ import util
 from metric import *
 from frozendict import frozendict
 from string import join
+from inspect import isclass
+
 
 class Registry(object):
     _id = 0
@@ -10,8 +12,8 @@ class Registry(object):
     @staticmethod
     def registry(registry_name='default'):
         registries = Registry._registries
-        if name in registries:
-            return registry.get(registry_name)
+        if registry_name in registries:
+            return registries.get(registry_name)
 
         registries[registry_name] = Registry(registry_name)
         return registries[registry_name]
@@ -39,8 +41,8 @@ class Registry(object):
     def metrics(self):
         return frozendict(self._metrics)
 
-    def get(self, name):
-        return self._metrics.get(name)
+    def get(self, metric_name):
+        return self._metrics.get(metric_name)
 
     def __str__(self):
         output = '[\n'
@@ -59,10 +61,14 @@ class Registry(object):
     def __hash__(self):
         return self._id
 
+
 def name(*args):
-    names = [str(x) for x in args if x]
-    if not names:
+    if not args:
         raise ValueError('at least one name must be provided')
+
+    names = []
+    for x in args:
+        names.append(x.__module__ + '.' + x.__name__ if isclass(x) else str(x))
 
     return join(names, '.')
 

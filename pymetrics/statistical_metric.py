@@ -1,11 +1,10 @@
-import util
 import numpy as np
 from counter import Counter
 from duration import Duration
 from timeunit import now
 
-class StatisticalMetric(Counter):
 
+class StatisticalMetric(Counter):
     def __init__(self, name, series):
         Counter.__init__(self, name)
         self._series = series

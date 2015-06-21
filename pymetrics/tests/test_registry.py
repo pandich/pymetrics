@@ -1,14 +1,16 @@
 import unittest
 from pymetrics.metric import Metric
-from pymetrics.registry import Registry
+from pymetrics.registry import Registry, name
 
 class Nothing(Metric):
     def __init__(self):
         Metric.__init__(self)
 
+    def dump(self):
+        return {}
+
 
 class TestCoreRegistry(unittest.TestCase):
-
     registry = None
 
     def setUp(self):
@@ -23,6 +25,11 @@ class TestCoreRegistry(unittest.TestCase):
     def test_to_string(self):
         self.registry.register(Nothing())
         self.assertGreater(str(self.registry).index('name:"test"'), 0)
+
+    def test_name(self):
+        self.assertEquals(name('a'), 'a')
+        self.assertEquals(name('a', 'b'), 'a.b')
+        self.assertEquals(name(Nothing, 'b'), 'test_registry.Nothing.b')
 
 ###
 

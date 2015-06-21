@@ -1,9 +1,7 @@
 from threading import Thread, Event
 from duration import *
 from timeunit import seconds
-from registry import Registry
 from time import sleep
-import util
 
 
 class Reporter(Thread):
