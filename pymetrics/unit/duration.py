@@ -1,4 +1,4 @@
-from timeunit import *
+from pymetrics.unit.timeunit import *
 
 
 class Duration(object):

@@ -1,8 +1,8 @@
 import numpy as np
-import traceback
+
 from counter import Counter
-from duration import Duration
-from timeunit import now
+from unit.duration import Duration
+from pymetrics.unit.timeunit import now
 
 
 class StatisticalMetric(Counter):

@@ -1,12 +1,13 @@
 import unittest
 from time import sleep
+
 from pymetrics.counter import Counter
 from pymetrics.timer import Timer
 from pymetrics.registry import registry, name
-from pymetrics.http_reporter import HttpReporter
+from pymetrics.reporter.http_reporter import HttpReporter
+
 
 class TestHttpReporter(unittest.TestCase):
-    @unittest.skip('skip')
     def test_a(self):
         c = Counter(name('some', 'example', 1))
         registry.register(c)
@@ -17,7 +18,12 @@ class TestHttpReporter(unittest.TestCase):
         )
         reporter.start()
 
-        sleep(60)
+        with t.time():
+            sleep(2)
+
+        for x in range(1, 20):
+            sleep(1)
+            c.inc()
 
         reporter.stop()
 

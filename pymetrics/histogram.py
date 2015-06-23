@@ -1,8 +1,8 @@
 import numpy as np
+
 from metric import metric_decorated
 from statistical_metric import StatisticalMetric
-from timeunit import now
-
+from pymetrics.unit.timeunit import now
 
 time_key = 'time'
 value_key = 'value'

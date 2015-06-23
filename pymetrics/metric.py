@@ -15,7 +15,7 @@ def metric_decorator_registry(**options):
 
 class MetricError(Exception):
     def __init__(self):
-        return
+        pass
 
 
 class MetricTypeError(TypeError, MetricError):
@@ -58,10 +58,10 @@ class Metric(object):
         raise NotImplementedError
 
     def __enter__(self):
-        return
+        pass
 
     def __exit__(self, value_type, value, traceback):
-        return
+        pass
 
     def __str__(self):
         return '{metric:s}: name:"{value:s}"'.format(

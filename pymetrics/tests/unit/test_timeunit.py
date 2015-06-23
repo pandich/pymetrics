@@ -1,5 +1,7 @@
 import unittest
-from pymetrics.timeunit import *
+
+from pymetrics.unit.timeunit import *
+
 
 class TestTimeUnit(unittest.TestCase):
     def test_minute_to_second(self):

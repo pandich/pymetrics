@@ -1,6 +1,6 @@
 from metric import MetricError, metric_decorated
 from histogram import Histogram
-from timeunit import now
+from pymetrics.unit.timeunit import now
 
 
 class TimerAlreadyStoppedError(MetricError):

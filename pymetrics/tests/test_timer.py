@@ -1,8 +1,10 @@
 import unittest
 from time import sleep
+
 from pymetrics.registry import name
 from pymetrics.timer import Timer
-from pymetrics.timeunit import milliseconds, seconds
+from pymetrics.unit.timeunit import milliseconds, seconds
+
 
 class TestTimer(unittest.TestCase):
     def test_with(self):

@@ -1,4 +1,4 @@
-import timeunit
+from pymetrics.unit import timeunit
 from metric import Metric
 
 

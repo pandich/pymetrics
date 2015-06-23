@@ -15,6 +15,8 @@ class Meter(Histogram):
         self.mark()
         return
 
+    def __exit__(*unused):
+        pass
 
 def metered(target=None, **options):
     def before(record):
