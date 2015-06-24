@@ -37,9 +37,16 @@ class Reporter(object):
         raise NotImplementedError
 
     def report(self):
-        report_body = {}
+        metric_body = {}
         for name, metric in self._registry.metrics.iteritems():
-            report_body[name] = metric.dump()
+            metric_body[name] = metric.dump()
+
+        health_body = {}
+
+        report_body = {
+            'metrics': metric_body,
+            'health': health_body,
+        }
 
         self.push(report_body)
         return

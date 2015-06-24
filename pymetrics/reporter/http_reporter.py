@@ -1,16 +1,14 @@
 import json
 from threading import Thread
 from reporter import Reporter
-from flask import Flask
+from flask import Flask, render_template
 from flask_classy import FlaskView, route
 
 class HttpReporter(Reporter):
 
     def __init__(self, registry, host='0.0.0.0', port=9091):
         Reporter.__init__(self, registry)
-        self._host = host
-        self._port = port
-        self.snapshot = {}
+        self._snapshot = {}
 
         reporter = self
 
@@ -23,25 +21,46 @@ class HttpReporter(Reporter):
                 return
 
             @route('/')
-            def snapshot(self):
-                return HttpReporter.generate_output(reporter.snapshot)
+            def index(self):
+                return render_template('index.html', title='PyMetrics')
+
+            @route('/metrics')
+            def metrics(self):
+                return HttpReporter.generate_output(
+                    reporter.snapshot['metrics']
+                )
+
+            @route('/health')
+            def metrics(self):
+                return HttpReporter.generate_output(
+                    reporter.snapshot['health']
+                )
 
         def start_app():
             app = Flask(__name__)
             ReporterView.register(app)
-            app.run(host=self._host, port=self._port, debug=True)
+            app.run(host=host, port=port, debug=True)
+            return
 
-        self._http_thread = Thread(name='metrics_web_server', target=start_app, verbose=True)
+        self._http_thread = Thread(
+            name='metrics_web_server',
+            target=start_app,
+            verbose=True,
+        )
         return
 
     def start(self):
-        super(HttpReporter, self).start()
+        Reporter.start(self)
         self._http_thread.start()
         return
 
     def push(self, dump):
-        self.snapshot = dump
+        self._snapshot = dump
         return
+
+    @property
+    def snapshot(self):
+        return self._snapshot
 
     @staticmethod
     def generate_output(dump):
