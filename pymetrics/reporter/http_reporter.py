@@ -20,17 +20,19 @@ class HttpReporter(Reporter):
                 FlaskView.__init__(self)
                 return
 
-            @route('/')
+            @route(route_base)
             def index(self):
-                return render_template('index.html', title='PyMetrics')
-
-            @route('/metrics')
-            def metrics(self):
                 return HttpReporter.generate_output(
-                    reporter.snapshot['metrics']
+                    reporter.snapshot
                 )
 
-            @route('/health')
+            @route('/metrics/')
+            def metrics(self):
+                return HttpReporter.generate_output(
+                    reporter.snapshot.get('metrics')
+                )
+
+            @route('/health/')
             def metrics(self):
                 return HttpReporter.generate_output(
                     reporter.snapshot['health']
@@ -39,7 +41,7 @@ class HttpReporter(Reporter):
         def start_app():
             app = Flask(__name__)
             ReporterView.register(app)
-            app.run(host=host, port=port, debug=True)
+            app.run(host=host, port=port)
             return
 
         self._http_thread = Thread(
